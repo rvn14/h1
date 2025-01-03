@@ -1,0 +1,165 @@
+import javax.swing.*;
+import java.sql.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class Form {
+    public static void main(String[] args) {
+
+
+
+        JFrame frame = new JFrame("Sign Up Form");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(500, 500);
+        frame.setLayout(new BorderLayout());
+        frame.setResizable(false);
+
+
+
+        JPanel mainPanel = new JPanel();
+        mainPanel.setLayout(null);
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        frame.add(mainPanel, BorderLayout.CENTER);
+
+
+
+        JLabel title = new JLabel("Sign-Up Form");
+        title.setFont(new Font("Poppins", Font.BOLD, 18));
+        title.setForeground(Color.BLUE);
+        title.setVerticalAlignment(JLabel.TOP);
+        title.setHorizontalAlignment(JLabel.CENTER);
+        title.setBounds(0, 10, 500, 50);
+        mainPanel.add(title);
+
+        JLabel name = new JLabel("Name");
+        name.setFont(new Font("Poppins", Font.PLAIN, 18));
+        name.setBounds(80, 60, 100, 40);
+        mainPanel.add(name);
+
+        JTextField tname = new JTextField();
+        tname.setFont(new Font("Poppins", Font.PLAIN, 15));
+        tname.setBounds(180, 60, 220, 40);
+        tname.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        mainPanel.add(tname);
+
+        JLabel email = new JLabel("Email");
+        email.setFont(new Font("Poppins", Font.PLAIN, 18));
+        email.setBounds(80, 110, 100, 40);
+        mainPanel.add(email);
+
+        JTextField temail = new JTextField();
+        temail.setFont(new Font("Poppins", Font.PLAIN, 15));
+        temail.setBounds(180, 110, 220, 40);
+        temail.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        mainPanel.add(temail);
+
+        JLabel gender = new JLabel("Gender");
+        gender.setFont(new Font("Poppins", Font.PLAIN, 18));
+        gender.setBounds(80, 160, 100, 40);
+        mainPanel.add(gender);
+
+        JRadioButton male = new JRadioButton("Male"); // Male radio button
+        male.setFont(new Font("Arial", Font.PLAIN, 15));
+        male.setSelected(true);
+        male.setBounds(180, 160, 100, 40);
+        mainPanel.add(male);
+
+        JRadioButton female = new JRadioButton("Female"); // Male radio button
+        female.setFont(new Font("Arial", Font.PLAIN, 15));
+        female.setSelected(true);
+        female.setBounds(280, 160, 100, 40);
+        mainPanel.add(female);
+
+        ButtonGroup gengp = new ButtonGroup(); // Group for gender radio button
+        gengp.add(male);
+        gengp.add(female);
+
+        JLabel pass = new JLabel("Password");
+        pass.setFont(new Font("Arial", Font.PLAIN, 18));
+        pass.setBounds(80, 220, 100, 40);
+        mainPanel.add(pass);
+
+        JPasswordField tpass = new JPasswordField(); // Password Field
+        tpass.setFont(new Font("Arial", Font.PLAIN, 15));
+        tpass.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        tpass.setBounds(180, 220, 220, 40);
+        mainPanel.add(tpass);
+
+        JCheckBox checkBox = new JCheckBox("I am not a robot");
+        checkBox.setFont(new Font("Arial", Font.PLAIN, 15));
+        checkBox.setBounds(80, 270, 220, 40);
+        mainPanel.add(checkBox);
+
+        JButton signup = new JButton("Sign-Up");
+        signup.setFont(new Font("Poppins", Font.BOLD, 15));
+        signup.setBackground(Color.BLUE);
+        signup.setForeground(Color.WHITE);
+        signup.setBounds(150, 320, 200, 40);
+        mainPanel.add(signup);
+
+
+        signup.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String name = tname.getText();
+                String email = temail.getText();
+                String gender = male.isSelected() ? "Male" : "Female";
+                String password = new String(tpass.getPassword());
+
+                if (name.isEmpty() || email.isEmpty() || password.isEmpty()) {
+                    JOptionPane.showMessageDialog(frame, "All fields are required!");
+                    return;
+                }
+
+                // Database Insert
+                try (Connection connection = Database.getConnection()) {
+                    String sql = "INSERT INTO users (name, email, gender, password) VALUES (?, ?, ?, ?)";
+                    PreparedStatement stmt = connection.prepareStatement(sql);
+                    stmt.setString(1, name);
+                    stmt.setString(2, email);
+                    stmt.setString(3, gender);
+                    stmt.setString(4, password);
+
+                    stmt.executeUpdate();
+                    JOptionPane.showMessageDialog(frame, "User registered successfully!");
+                } catch (SQLException ex) {
+                    JOptionPane.showMessageDialog(frame, "Error: " + ex.getMessage());
+                }
+            }
+        });
+
+
+
+        frame.setVisible(true);
+    }
+
+
+}
+
+
+
+--------------------------------- Database.java ---------------------------------------------
+
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
+public class Database {
+    private static final String URL = "jdbc:mysql://localhost:3306/signup";
+    private static final String USER = "root"; // Default MySQL username in XAMPP
+    private static final String PASSWORD = ""; // Default is blank
+
+    public static Connection getConnection() {
+        Connection connection = null;
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            connection = DriverManager.getConnection(URL, USER, PASSWORD);
+            System.out.println("Database connected successfully!");
+        } catch (ClassNotFoundException | SQLException e) {
+            System.out.println("Database connection failed: " + e.getMessage());
+        }
+        return connection;
+    }
+}
