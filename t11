@@ -3,6 +3,9 @@ import java.sql.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 public class Form {
     public static void main(String[] args) {
@@ -102,29 +105,24 @@ public class Form {
         signup.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String name = tname.getText();
-                String email = temail.getText();
-                String gender = male.isSelected() ? "Male" : "Female";
-                String password = new String(tpass.getPassword());
+//
+                Connection connection = null;
+                try {
+                    Class.forName("com.mysql.cj.jdbc.Driver");
+                    connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/signup", "root", "");
 
-                if (name.isEmpty() || email.isEmpty() || password.isEmpty()) {
-                    JOptionPane.showMessageDialog(frame, "All fields are required!");
-                    return;
-                }
 
-                // Database Insert
-                try (Connection connection = Database.getConnection()) {
                     String sql = "INSERT INTO users (name, email, gender, password) VALUES (?, ?, ?, ?)";
                     PreparedStatement stmt = connection.prepareStatement(sql);
-                    stmt.setString(1, name);
-                    stmt.setString(2, email);
-                    stmt.setString(3, gender);
-                    stmt.setString(4, password);
+                    stmt.setString(1, tname.getText());
+                    stmt.setString(2, temail.getText());
+                    stmt.setString(3, male.isSelected() ? "Male" : "Female");
+                    stmt.setString(4, new String(tpass.getPassword()));
 
                     stmt.executeUpdate();
                     JOptionPane.showMessageDialog(frame, "User registered successfully!");
-                } catch (SQLException ex) {
-                    JOptionPane.showMessageDialog(frame, "Error: " + ex.getMessage());
+                } catch (SQLException | ClassNotFoundException ex) {
+
                 }
             }
         });
@@ -135,31 +133,4 @@ public class Form {
     }
 
 
-}
-
-
-
---------------------------------- Database.java ---------------------------------------------
-
-
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-
-public class Database {
-    private static final String URL = "jdbc:mysql://localhost:3306/signup";
-    private static final String USER = "root"; // Default MySQL username in XAMPP
-    private static final String PASSWORD = ""; // Default is blank
-
-    public static Connection getConnection() {
-        Connection connection = null;
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            connection = DriverManager.getConnection(URL, USER, PASSWORD);
-            System.out.println("Database connected successfully!");
-        } catch (ClassNotFoundException | SQLException e) {
-            System.out.println("Database connection failed: " + e.getMessage());
-        }
-        return connection;
-    }
 }
