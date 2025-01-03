@@ -102,6 +102,14 @@ public class Form {
         mainPanel.add(signup);
 
 
+        JComboBox<String> comboBox = new JComboBox<>();
+        comboBox.addItem("Option 1");
+        comboBox.addItem("Option 2");
+        comboBox.addItem("Option 3");
+        comboBox.setBounds(190, 390, 120, 25);
+        panel.add(comboBox);
+
+
         signup.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
