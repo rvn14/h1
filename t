@@ -565,3 +565,107 @@ public class Registration extends JFrame {
 
 //Sign in part must be configured as well. Must add verifiction codes for sign in button and the password. Double checking is needed
 
+
+
+
+
+
+
+------------------------------------------------------------------------------------------------
+
+
+
+ResetButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String email = nameTextField1.getText();
+                String password = passwordLableTextField1.getText();
+
+                if (email.isEmpty()) {
+                    JOptionPane.showMessageDialog(
+                            null,
+                            "Email field cannot be empty!",
+                            "Invalid Input",
+                            JOptionPane.ERROR_MESSAGE
+                    );
+                    return;
+                }
+
+                if (password.isEmpty()) {
+                    JOptionPane.showMessageDialog(
+                            null,
+                            "Password field cannot be empty!",
+                            "Invalid Input",
+                            JOptionPane.ERROR_MESSAGE
+                    );
+                    return;
+                }
+
+                try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/users", "root", "Kavindu@0925")) {
+                    // Case-sensitive query for email and password
+                    String query = "SELECT * FROM users WHERE BINARY email = ? AND BINARY password = ?";
+                    try (PreparedStatement statement = connection.prepareStatement(query)) {
+                        statement.setString(1, email);
+                        statement.setString(2, password);
+
+                        try (ResultSet resultSet = statement.executeQuery()) {
+                            if (resultSet.next()) {
+                                JOptionPane.showMessageDialog(
+                                        null,
+                                        "Sign-in successful! Welcome, " + resultSet.getString("name") + ".",
+                                        "Success",
+                                        JOptionPane.INFORMATION_MESSAGE
+                                );
+                            } else {
+                                JOptionPane.showMessageDialog(
+                                        null,
+                                        "Invalid email or password. Please try again.",
+                                        "Sign-in Failed",
+                                        JOptionPane.ERROR_MESSAGE
+                                );
+                            }
+                        }
+                    }
+                } catch (SQLException ex) {
+                    JOptionPane.showMessageDialog(
+                            null,
+                            "Error connecting to the database: " + ex.getMessage(),
+                            "Database Error",
+                            JOptionPane.ERROR_MESSAGE
+                    );
+                }
+            }
+        });
+
+
+    }
+        private void updateDays (JComboBox < String > dayCombo,int monthIndex, int year){
+            int daysInMonth;
+
+            switch (monthIndex) {
+                case 1: // February
+                    daysInMonth = isLeapYear(year) ? 29 : 28;
+                    break;
+                case 3:
+                case 5:
+                case 8:
+                case 10:
+                    daysInMonth = 30;
+                    break;
+                default:
+                    daysInMonth = 31;
+                    break;
+            }
+
+            dayCombo.removeAllItems();
+            for (int i = 1; i <= daysInMonth; i++) {
+                dayCombo.addItem(String.valueOf(i));
+            }
+        }
+
+        private boolean isLeapYear ( int year){
+            return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+        }
+
+
+    }
