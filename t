@@ -1,671 +1,545 @@
-import javax.swing.*;
-import java.sql.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-
-public class Form {
-    public static void main(String[] args) {
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 
-
-        JFrame frame = new JFrame("Sign Up Form");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(500, 500);
-        frame.setLayout(new BorderLayout());
-        frame.setResizable(false);
+//Sorting ----------------------------------
 
 
+// Selection Sorting
 
-        JPanel mainPanel = new JPanel();
-        mainPanel.setLayout(null);
-        mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        frame.add(mainPanel, BorderLayout.CENTER);
-
-
-
-        JLabel title = new JLabel("Sign-Up Form");
-        title.setFont(new Font("Poppins", Font.BOLD, 18));
-        title.setForeground(Color.BLUE);
-        title.setVerticalAlignment(JLabel.TOP);
-        title.setHorizontalAlignment(JLabel.CENTER);
-        title.setBounds(0, 10, 500, 50);
-        mainPanel.add(title);
-
-        JLabel name = new JLabel("Name");
-        name.setFont(new Font("Poppins", Font.PLAIN, 18));
-        name.setBounds(80, 60, 100, 40);
-        mainPanel.add(name);
-
-        JTextField tname = new JTextField();
-        tname.setFont(new Font("Poppins", Font.PLAIN, 15));
-        tname.setBounds(180, 60, 220, 40);
-        tname.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        mainPanel.add(tname);
-
-        JLabel email = new JLabel("Email");
-        email.setFont(new Font("Poppins", Font.PLAIN, 18));
-        email.setBounds(80, 110, 100, 40);
-        mainPanel.add(email);
-
-        JTextField temail = new JTextField();
-        temail.setFont(new Font("Poppins", Font.PLAIN, 15));
-        temail.setBounds(180, 110, 220, 40);
-        temail.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        mainPanel.add(temail);
-
-        JLabel gender = new JLabel("Gender");
-        gender.setFont(new Font("Poppins", Font.PLAIN, 18));
-        gender.setBounds(80, 160, 100, 40);
-        mainPanel.add(gender);
-
-        JRadioButton male = new JRadioButton("Male"); // Male radio button
-        male.setFont(new Font("Arial", Font.PLAIN, 15));
-        male.setSelected(true);
-        male.setBounds(180, 160, 100, 40);
-        mainPanel.add(male);
-
-        JRadioButton female = new JRadioButton("Female"); // Male radio button
-        female.setFont(new Font("Arial", Font.PLAIN, 15));
-        female.setSelected(true);
-        female.setBounds(280, 160, 100, 40);
-        mainPanel.add(female);
-
-        ButtonGroup gengp = new ButtonGroup(); // Group for gender radio button
-        gengp.add(male);
-        gengp.add(female);
-
-        JLabel pass = new JLabel("Password");
-        pass.setFont(new Font("Arial", Font.PLAIN, 18));
-        pass.setBounds(80, 220, 100, 40);
-        mainPanel.add(pass);
-
-        JPasswordField tpass = new JPasswordField(); // Password Field
-        tpass.setFont(new Font("Arial", Font.PLAIN, 15));
-        tpass.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        tpass.setBounds(180, 220, 220, 40);
-        mainPanel.add(tpass);
-
-        JCheckBox checkBox = new JCheckBox("I am not a robot");
-        checkBox.setFont(new Font("Arial", Font.PLAIN, 15));
-        checkBox.setBounds(80, 270, 220, 40);
-        mainPanel.add(checkBox);
-
-        JButton signup = new JButton("Sign-Up");
-        signup.setFont(new Font("Poppins", Font.BOLD, 15));
-        signup.setBackground(Color.BLUE);
-        signup.setForeground(Color.WHITE);
-        signup.setBounds(150, 320, 200, 40);
-        mainPanel.add(signup);
-
-
-        JComboBox<String> comboBox = new JComboBox<>();
-        comboBox.addItem("Option 1");
-        comboBox.addItem("Option 2");
-        comboBox.addItem("Option 3");
-        comboBox.setBounds(190, 390, 120, 25);
-        panel.add(comboBox);
-
-
-        signup.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-//
-                Connection connection = null;
-                try {
-                    Class.forName("com.mysql.cj.jdbc.Driver");
-                    connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/signup", "root", "");
-
-
-                    String sql = "INSERT INTO users (name, email, gender, password) VALUES (?, ?, ?, ?)";
-                    PreparedStatement stmt = connection.prepareStatement(sql);
-                    stmt.setString(1, tname.getText());
-                    stmt.setString(2, temail.getText());
-                    stmt.setString(3, male.isSelected() ? "Male" : "Female");
-                    stmt.setString(4, new String(tpass.getPassword()));
-
-                    stmt.executeUpdate();
-                    JOptionPane.showMessageDialog(frame, "User registered successfully!");
-                } catch (SQLException | ClassNotFoundException ex) {
-
-                }
-            }
-        });
-
-
-
-        frame.setVisible(true);
+void selectionSort(int arr[], int n) {
+    int i, j, min, temp;
+    for (i = 0; i < n - 1; i++) {
+        min = i;
+        for (j = i + 1; j < n; j++)
+            if (arr[j] < arr[min])
+                min = j;
+        if (min != i) {
+            temp = arr[i];
+            arr[i] = arr[min];
+            arr[min] = temp;
+        }
     }
+}
 
 
+//bubble sorting
+
+void bubbleSort(int arr[], int n) {
+    int i, j, temp;
+    for (i = 0; i < n - 1; i++)
+        for (j = 0; j < n - i - 1; j++)
+            if (arr[j] > arr[j + 1]) {
+                temp = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = temp;
+            }
+}   
+
+
+//INSERTION SORTING
+
+void insertionSort(int arr[], int n) {
+    int i, key, j;
+    for (i = 1; i < n; i++) {
+        key = arr[i];
+        j = i - 1;
+        while (j >= 0 && arr[j] > key) {
+            arr[j + 1] = arr[j];
+            j = j - 1;
+        }
+        arr[j + 1] = key;
+    }
+}
+
+
+  
+
+
+//Searching ----------------------------------
+
+//LINEAR SEARCH
+
+int linearSearch(int arr[], int n, int x) {
+    for (int i = 0; i < n; i++)
+        if (arr[i] == x)
+            return i;
+    return -1;
+}
+
+
+
+//BINARY SEARCH
+
+
+int binarySearch(int arr[], int l, int r, int x) {
+    if (r >= l) {
+        int mid = (r + l) / 2;
+        if (arr[mid] == x)
+            return mid;
+        if (arr[mid] > x)
+            return binarySearch(arr, l, mid - 1, x);
+        return binarySearch(arr, mid + 1, r, x);
+    }
+    return -1;
+}
+
+
+// Traverse ----------------------------------
+
+//Preorder Traversal
+
+void preorder(int arr[], int n, int i) {
+    if (i >= n)
+        return;
+    printf("%d ", arr[i]);
+    preorder(arr, n, 2 * i + 1);
+    preorder(arr, n, 2 * i + 2);
+}
+
+
+//Inorder Traversal
+
+
+void inorder(int arr[], int n, int i) {
+    if (i >= n)
+        return;
+    inorder(arr, n, 2 * i + 1);
+    printf("%d ", arr[i]);
+    inorder(arr, n, 2 * i + 2);
+}
+
+
+//Postorder Traversal
+
+
+void postorder(int arr[], int n, int i) {
+    if (i >= n)
+        return;
+    postorder(arr, n, 2 * i + 1);
+    postorder(arr, n, 2 * i + 2);
+    printf("%d ", arr[i]);
+}
+
+
+
+//binary search tree ----------------------------------
+
+struct node {
+    int key;
+    struct node *left, *right;
+};
+
+struct node *newNode(int item) {
+    struct node *temp = (struct node *)malloc(sizeof(struct node));
+    temp->key = item;
+    temp->left = temp->right = NULL;
+    return temp;
+}
+
+void inorderBST(struct node *root) {
+    if (root != NULL) {
+        inorderBST(root->left);
+        printf("%d \n", root->key);
+        inorderBST(root->right);
+    }
+}
+
+struct node *insert(struct node *node, int key) {
+    if (node == NULL) return newNode(key);
+    if (key < node->key)
+        node->left = insert(node->left, key);
+    else if (key > node->key)
+        node->right = insert(node->right, key);
+    return node;
+}
+
+// Abstract Data Types --------------------
+
+// queue ----------------------------------
+
+#define MAX 100
+
+typedef enum {false, true} bool;
+
+typedef struct {
+    int front, rear, count;
+    int items[];
+}Queue;
+
+void createQueue(Queue *q){
+    q->front = 0;
+    q->rear = -1;
+    q->count = 0;
+}
+
+int isQueuefull(Queue *q){
+    if (q->rear == MAX - 1)
+    {
+        return true;
+    }else
+        return false;
+}
+
+
+int isQueueEmpty(Queue *q){
+    if (q->rear < q-> front)
+    {
+        return true;
+    }else{
+        return false;
+    }
+}
+
+void append(Queue *q, int x){
+    if (isQueuefull)
+    {
+        printf("queue full");
+    }else{
+        q->items[++q->rear] = x;
+        q->count++;
+    }
+};
+
+void serve(Queue *q, int *x){
+    if (isQueueEmpty)
+    {
+        printf("Queue is empty");
+    }else
+        *x = q->items[q->front++];
+        q->count--;
+};
+
+//stack ----------------------------------
+
+typedef struct
+{
+    int top;
+    int items[MAX];
+}Stack;
+
+void createStack(Stack* s) {
+    s->top = -1;
+}
+
+int isFull(Stack* s) {
+    return s->top == MAX -1; 
+}
+
+int isEmpty(Stack* s) {
+    return s->top == -1;
+}
+
+void push(int x, Stack *s){
+    if (isFull(s))
+    {
+        printf("Stack is full");
+    }else{
+        s->items[++(s->top)] = x;
+    }
+    
+};
+
+int pop(Stack *s){
+    if (isEmpty)
+    {
+        printf("Stack is Empty");
+    }else{
+        int x = s->items[s->top--];
+        return x;
+    }
+};
+
+
+//-------------------------------------------------
+
+typedef struct
+{
+    int item;
+    Node *next;
+}Node;
+
+
+typedef struct 
+{
+    Node *top;
+    bool isfull;
+    int no_ele;
+
+}StackLinked;
+
+void createStack(StackLinked *s){
+    s->top = NULL;
+    s->isfull = false;
+    s->no_ele = 0;
+};
+
+void linkedpush(StackLinked *s, int x){
+    Node *np;
+    np = (Node*)malloc(sizeof(Node));
+    if (np == NULL)
+    {
+        printf("Failed");
+    }else
+    {
+        np->item = x;
+        np->next = s->top;
+        s->top = np;
+        s->no_ele++;     
+    }
+    
+};
+
+void linkedpop(StackLinked *s, int *item){
+    Node *np;
+    *item = np->item;
+    np = s->top;
+    s->top = s->top->next;
+    s->no_ele--;
+    free(np);
+};
+
+
+// lists ----------------------------------
+
+
+typedef struct pp1
+{
+    int count;
+    int items[MAX];
+}List;
+
+
+void createList(List *l){
+    l->count = 0;
+}
+
+int isListFull(List *l){
+    if (l->count == MAX)
+    {
+        return 1;
+    }else{
+        return 0;
+    }
+}
+
+int isListEmpty(List *l){
+    if (l->count == 0)
+    {
+        return 1;
+    }else{
+        return 0;
+    }
+}
+
+void append(List *l, int x){
+    if (isListFull(l))
+    {
+        printf("List is full");
+    }
+    else{
+        l->items[++l->count] = x;
+
+    }
+}
+
+void serve(List *l, int *x){
+    if (isListEmpty(l))
+    {
+        printf("List is empty");
+    }else{
+        *x = l->items[l->count--];
+    }
+}
+
+int main(int argc, char const *argv[])
+{
+    List l;
+    createList(&l);
+    append(&l, 5);
+    append(&l, 6);
+    append(&l, 7);
+    int x;
+    serve(&l, &x);
+    printf("%d", x);
+    return 0;
 }
 
 
 
 
------------------------------------------------------------------------------------------------------------
 
 
-//import javax.swing.*;
-//import java.awt.*;
-//import java.awt.event.ActionEvent;
-//import java.awt.event.ActionListener;
+int main(int argc, char const *argv[])
+{
+    int arr[] = {12, 11, 13, 5, 6, 7};
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.sql.*;
-
-//Removed the reset button action listener
-//Removed right side text area
-//Changed the layout. now it has a sign in and a sign up button
-//Need to add a correct verfication code to email field
-
-public class Registration extends JFrame {
-    private final int FRAME_WIDTH = 700;
-    private final int FRAME_HEIGHT = 880;
-    private final int FRAME_X = 680;
-    private final int FRAME_Y = 150;
-
-    Registration() {
-        setTitle("Registration Form");
-        setSize(FRAME_WIDTH, FRAME_HEIGHT);
-        setResizable(false);
-        setLocation(FRAME_X, FRAME_Y);
-
-        Container contentPane = getContentPane();
-        contentPane.setLayout(null);
-
-        //Registration Form
-
-        JLabel titleLable = new JLabel("SIGN UP");
-        titleLable.setSize(350, 50);
-        titleLable.setLocation(310, 20);
-        titleLable.setFont(new Font("Arial", Font.BOLD, 25));
-        contentPane.add(titleLable);
-
-        //name
-
-        JLabel nameLable = new JLabel("Name");
-        nameLable.setSize(100, 30);
-        nameLable.setLocation(150, 100);
-        nameLable.setFont(new Font("Arial", Font.PLAIN, 20));
-        contentPane.add(nameLable);
-
-        JTextField nameTextField = new JTextField();
-        nameTextField.setSize(250, 30);
-        nameTextField.setLocation(250, 100);
-        nameTextField.setFont(new Font("Arial", Font.PLAIN, 20));
-        contentPane.add(nameTextField);
-
-        //email
-
-        JLabel emailLable = new JLabel("Email");
-        emailLable.setSize(100, 30);
-        emailLable.setLocation(150, 150);
-        emailLable.setFont(new Font("Arial", Font.PLAIN, 20));
-        contentPane.add(emailLable);
-
-        JTextField emailLableTextField = new JTextField();
-        emailLableTextField.setSize(250, 30);
-        emailLableTextField.setLocation(250, 150);
-        emailLableTextField.setFont(new Font("Arial", Font.PLAIN, 20));
-        contentPane.add(emailLableTextField);
+    int res = binarySearch(arr, 0, 5, 13);
+    printf("Binary Search: %d\n", res);
+    return 0;
+}
 
 
-        // gender
+//stack ----------------------------------
 
-        JLabel genderLable = new JLabel("Gender");
-        genderLable.setSize(100, 30);
-        genderLable.setLocation(150, 200);
-        genderLable.setFont(new Font("Arial", Font.PLAIN, 20));
-        contentPane.add(genderLable);
+#define MAX 1000
 
-        JRadioButton male = new JRadioButton("Male");
-        male.setFont(new Font("Arial", Font.PLAIN, 15));
-        male.setSelected(true);
-        male.setSize(75, 20);
-        male.setLocation(250, 205);
-        contentPane.add(male);
-
-        JRadioButton female = new JRadioButton("Female");
-        female.setFont(new Font("Arial", Font.PLAIN, 15));
-        female.setSelected(false);
-        female.setSize(80, 20);
-        female.setLocation(350, 205);
-        contentPane.add(female);
-
-        ButtonGroup gender = new ButtonGroup();
-        gender.add(male);
-        gender.add(female);
-
-        // birthday
-
-        JLabel birthdayLable = new JLabel("Birthday");
-        birthdayLable.setSize(100, 30);
-        birthdayLable.setLocation(150, 250);
-        birthdayLable.setFont(new Font("Arial", Font.PLAIN, 20));
-        contentPane.add(birthdayLable);
-
-        String[] days = {
-                "1", "2", "3", "4", "5", "6", "7", "8", "9", "10",
-                "11", "12", "13", "14", "15", "16", "17", "18", "19", "20",
-                "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31"
-        };
-        JComboBox dayCombo = new JComboBox(days);
-        dayCombo.setSize(50, 20);
-        dayCombo.setLocation(250, 255);
-        add(dayCombo);
-
-        String[] months = {
-                "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct",
-                "Nov", "Dec"
-        };
-        JComboBox monthCombo = new JComboBox(months);
-        monthCombo.setSize(80, 20);
-        monthCombo.setLocation(300, 255);
-        add(monthCombo);
-
-        String[] years = {
-                "2024", "2023", "2022", "2021", "2020", "2019", "2018", "2017", "2016", "2015",
-                "2014", "2013", "2012", "2011", "2010", "2009", "2008", "2007", "2006", "2005",
-                "2004", "2003", "2002", "2001", "2000", "1999", "1998", "1997", "1996", "1995",
-                "1994", "1993", "1992", "1991", "1990"
-        };
-        JComboBox yearCombo = new JComboBox(years);
-        yearCombo.setSize(100, 20);
-        yearCombo.setLocation(380, 255);
-        add(yearCombo);
-
-        monthCombo.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                updateDays(dayCombo, monthCombo.getSelectedIndex(), Integer.parseInt((String) yearCombo.getSelectedItem()));
-            }
-        });
-
-        yearCombo.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                updateDays(dayCombo, monthCombo.getSelectedIndex(), Integer.parseInt((String) yearCombo.getSelectedItem()));
-            }
-        });
+struct Stack {
+    int top;
+    int items[MAX];
+};
 
 
-// password
+void push(struct Stack *ps, int x) {
+    if (ps->top == (MAX - 1)) {
+        printf("Stack is full");
+    } else {
+        ps->items[++(ps->top)] = x;
+    }
+}
 
-        JLabel passwordLable = new JLabel("Password");
-        passwordLable.setSize(100, 30);
-        passwordLable.setLocation(150, 300);
-        passwordLable.setFont(new Font("Arial", Font.PLAIN, 20));
-        contentPane.add(passwordLable);
 
-        JTextField passwordText = new JTextField();
-        passwordText.setFont(new Font("Arial", Font.PLAIN, 15));
-        passwordText.setSize(250, 30);
-        passwordText.setLocation(250, 300);
-        contentPane.add(passwordText);
+int pop(struct Stack *ps) {
+    if (ps->top == -1) {
+        printf("Stack is empty");
+        return -1;
+    } else {
+        int x = ps->items[ps->top];
+        ps->top = ps->top - 1;
+        return x;
+    }
+}
 
-        //Verify the consent
-        JCheckBox checkBox = new JCheckBox("I am not a ROBOT.");
-        checkBox.setFont(new Font("Arial", Font.PLAIN, 15));
-        checkBox.setSize(250, 20);
-        checkBox.setLocation(220, 350);
-        contentPane.add(checkBox);
+int peek(struct Stack *ps) {
+    if (ps->top == -1) {
+        printf("Stack is empty");
+        return -1;
+    } else {
+        return ps->items[ps->top];
+    }
+}
 
-        JButton signupButton = new JButton("Signup");
-        signupButton.setFont(new Font("Arial", Font.PLAIN, 20));
-        signupButton.setSize(200, 40);
-        signupButton.setLocation(250, 400);
-        contentPane.add(signupButton);
+int isEmpty(struct Stack *ps) {
+    return ps->top == -1;
+    
+}
 
-        JLabel titleLable1 = new JLabel("SIGN IN");
-        titleLable1.setSize(350, 50);
-        titleLable1.setLocation(310, 480);
-        titleLable1.setFont(new Font("Arial", Font.BOLD, 25));
-        contentPane.add(titleLable1);
 
-        //email-sign-in
+//stackLinked----------------------------
+typedef enum {false, true} bool;
 
-        JLabel nameLable1 = new JLabel("Email");
-        nameLable1.setSize(100, 30);
-        nameLable1.setLocation(150, 530);
-        nameLable1.setFont(new Font("Arial", Font.PLAIN, 20));
-        contentPane.add(nameLable1);
+typedef struct
+{
+    int item;
+    Node *next;
+}Node;
 
-        JTextField nameTextField1 = new JTextField();
-        nameTextField1.setSize(250, 30);
-        nameTextField1.setLocation(250, 530);
-        nameTextField1.setFont(new Font("Arial", Font.PLAIN, 20));
-        contentPane.add(nameTextField1);
 
-        //password-sign-in
+typedef struct 
+{
+    Node *top;
+    bool isfull;
+    int no_ele;
 
-        JLabel passwordLable1 = new JLabel("Password");
-        passwordLable1.setSize(100, 30);
-        passwordLable1.setLocation(150, 580);
-        passwordLable1.setFont(new Font("Arial", Font.PLAIN, 20));
-        contentPane.add(passwordLable1);
+}StackLinked;
 
-        JTextField passwordLableTextField1 = new JTextField();
-        passwordLableTextField1.setSize(250, 30);
-        passwordLableTextField1.setLocation(250, 580);
-        passwordLableTextField1.setFont(new Font("Arial", Font.PLAIN, 20));
-        contentPane.add(passwordLableTextField1);
+void createStack(StackLinked *s){
+    s->top = NULL;
+    s->isfull = false;
+    s->no_ele = 0;
+};
 
-        JButton ResetButton = new JButton("Sign in");
-        ResetButton.setFont(new Font("Arial", Font.PLAIN, 20));
-        ResetButton.setSize(200, 40);
-        ResetButton.setLocation(250, 630);
-        contentPane.add(ResetButton);
+void linkedpush(StackLinked *s, int x){
+    Node *np;
+    np = (Node*)malloc(sizeof(Node));
+    if (np == NULL)
+    {
+        printf("Failed");
+    }else
+    {
+        np->item = x;
+        np->next = s->top;
+        s->top = np;
+        s->no_ele++;     
+    }
+    
+};
+
+void linkedpop(StackLinked *s, int *item){
+    Node *np;
+    *item = np->item;
+    np = s->top;
+    s->top = s->top->next;
+    s->no_ele--;
+    free(np);
+};
 
 
 
-        //ResetButton.addActionListener(new ActionListener() {
-         //   @Override
-         //   public void actionPerformed(ActionEvent e) {
-        //        nameTextField.setText("");
-         //       emailLableTextField.setText("");
-          //      male.setSelected(true);
-          //      dayCombo.setSelectedIndex(0);
-         //       monthCombo.setSelectedIndex(0);
-         //       yearCombo.setSelectedIndex(0);
-         //       passwordText.setText("");
-          //      checkBox.setSelected(false);
 
-        //    }
-       // });
-        signupButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
+//-LIST----------------------------------
 
-                if (!checkBox.isSelected()) {
-                    JOptionPane.showMessageDialog(
-                            null,
-                            "You must accept the terms and conditions to proceed.",
-                            "Terms Not Accepted",
-                            JOptionPane.ERROR_MESSAGE
-                    );
-                    return;
-                }
-                String name = nameTextField.getText();
-                String email = emailLableTextField.getText();
-                String gender = male.isSelected() ? "Male" : female.isSelected() ? "Female" : "Not selected";
-                String birthday = dayCombo.getSelectedItem() + " " + monthCombo.getSelectedItem() + " " + yearCombo.getSelectedItem();
-                String password = passwordText.getText();
-                String terms = checkBox.isSelected() ? "Accepted" : "Not Accepted";
-
-                if (name.isEmpty()) {
-                    JOptionPane.showMessageDialog(
-                            null,
-                            "Name field cannot be empty!",
-                            "Invalid Input",
-                            JOptionPane.ERROR_MESSAGE
-                    );
-                    return;
-                }
-
-                if (email.isEmpty()) {
-                    JOptionPane.showMessageDialog(
-                            null,
-                            "Email field cannot be empty!",
-                            "Invalid Input",
-                            JOptionPane.ERROR_MESSAGE
-                    );
-                    return;
-                }
-
-                if (password.isEmpty()) {
-                    JOptionPane.showMessageDialog(
-                            null,
-                            "Password cannot be empty!",
-                            "Invalid Input",
-                            JOptionPane.ERROR_MESSAGE
-                    );
-                    return;
-                }
-
-// Email Verification should be configured properly
-                if (!email.matches("^[\\w.%+-]+@[\\w.-]+\\.[a-zA-Z]{2,}$")) {
-                    JOptionPane.showMessageDialog(
-                            null,
-                            "Email should be in the correct format (e.g., user@example.com)",
-                            "Invalid Input",
-                            JOptionPane.ERROR_MESSAGE
-                    );
-                    return;
-                }
-
-                try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/users", "root", "Kavindu@0925")) {
-                    String query = "INSERT INTO users (name, email, gender, birthday, password) VALUES (?, ?, ?, ?, ?)";
-                    try (PreparedStatement statement = connection.prepareStatement(query)) {
-                        statement.setString(1, name);
-                        statement.setString(2, email);
-                        statement.setString(3, gender);
-                        statement.setString(4, birthday);
-                        statement.setString(5, password);
+typedef struct pp1
+{
+    int count;
+    int items[MAX];
+}List;
 
 
-                        int rowsInserted = statement.executeUpdate();
-                        if (rowsInserted > 0) {
-                            JOptionPane.showMessageDialog(null, "Registration successful!", "Success", JOptionPane.INFORMATION_MESSAGE);
-                        }
-                    }
-                } catch (SQLException ex) {
-                    JOptionPane.showMessageDialog(null, "Error connecting to the database: " + ex.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
-                }
+void createList(List *l){
+    l->count = 0;
+}
 
+int isListFull(List *l){
+    if (l->count == MAX)
+    {
+        return 1;
+    }else{
+        return 0;
+    }
+}
 
-               //tring output = String.format(
-                      //"Name: %s\nMobile: %s\nGender: %s\nBirthday: %s\nAddress: %s\nTerms: %s",
-                      //name, email, gender, birthday, password, terms
-             // );
+int isListEmpty(List *l){
+    if (l->count == 0)
+    {
+        return 1;
+    }else{
+        return 0;
+    }
+}
 
-            }
-        });
-
-        ResetButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String email = nameTextField1.getText();
-                String password = passwordLableTextField1.getText();
-
-                if (email.isEmpty()) {
-                    JOptionPane.showMessageDialog(
-                            null,
-                            "Email field cannot be empty!",
-                            "Invalid Input",
-                            JOptionPane.ERROR_MESSAGE
-                    );
-                    return;
-                }
-
-                if (password.isEmpty()) {
-                    JOptionPane.showMessageDialog(
-                            null,
-                            "Password field cannot be empty!",
-                            "Invalid Input",
-                            JOptionPane.ERROR_MESSAGE
-                    );
-                    return;
-                }
-
-                try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/users", "root", "Kavindu@0925")) {
-                    // Case-sensitive query for email and password
-                    String query = "SELECT * FROM users WHERE BINARY email = ? AND BINARY password = ?";
-                    try (PreparedStatement statement = connection.prepareStatement(query)) {
-                        statement.setString(1, email);
-                        statement.setString(2, password);
-
-                        try (ResultSet resultSet = statement.executeQuery()) {
-                            if (resultSet.next()) {
-                                JOptionPane.showMessageDialog(
-                                        null,
-                                        "Sign-in successful! Welcome, " + resultSet.getString("name") + ".",
-                                        "Success",
-                                        JOptionPane.INFORMATION_MESSAGE
-                                );
-                            } else {
-                                JOptionPane.showMessageDialog(
-                                        null,
-                                        "Invalid email or password. Please try again.",
-                                        "Sign-in Failed",
-                                        JOptionPane.ERROR_MESSAGE
-                                );
-                            }
-                        }
-                    }
-                } catch (SQLException ex) {
-                    JOptionPane.showMessageDialog(
-                            null,
-                            "Error connecting to the database: " + ex.getMessage(),
-                            "Database Error",
-                            JOptionPane.ERROR_MESSAGE
-                    );
-                }
-            }
-        });
-
+void append(List *l, int x){
+    if (isListFull(l))
+    {
+        printf("List is full");
+    }
+    else{
+        l->items[++l->count] = x;
 
     }
-        private void updateDays (JComboBox < String > dayCombo,int monthIndex, int year){
-            int daysInMonth;
+}
 
-            switch (monthIndex) {
-                case 1: // February
-                    daysInMonth = isLeapYear(year) ? 29 : 28;
-                    break;
-                case 3:
-                case 5:
-                case 8:
-                case 10:
-                    daysInMonth = 30;
-                    break;
-                default:
-                    daysInMonth = 31;
-                    break;
-            }
-
-            dayCombo.removeAllItems();
-            for (int i = 1; i <= daysInMonth; i++) {
-                dayCombo.addItem(String.valueOf(i));
-            }
-        }
-
-        private boolean isLeapYear ( int year){
-            return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
-        }
-
-
+void serve(List *l, int *x){
+    if (isListEmpty(l))
+    {
+        printf("List is empty");
+    }else{
+        *x = l->items[l->count--];
     }
+}
 
-//Sign in part must be configured as well. Must add verifiction codes for sign in button and the password. Double checking is needed
-
-
-
-
-
-
-
-------------------------------------------------------------------------------------------------
-
-
-
-ResetButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String email = nameTextField1.getText();
-                String password = passwordLableTextField1.getText();
-
-                if (email.isEmpty()) {
-                    JOptionPane.showMessageDialog(
-                            null,
-                            "Email field cannot be empty!",
-                            "Invalid Input",
-                            JOptionPane.ERROR_MESSAGE
-                    );
-                    return;
-                }
-
-                if (password.isEmpty()) {
-                    JOptionPane.showMessageDialog(
-                            null,
-                            "Password field cannot be empty!",
-                            "Invalid Input",
-                            JOptionPane.ERROR_MESSAGE
-                    );
-                    return;
-                }
-
-                try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/users", "root", "Kavindu@0925")) {
-                    // Case-sensitive query for email and password
-                    String query = "SELECT * FROM users WHERE BINARY email = ? AND BINARY password = ?";
-                    try (PreparedStatement statement = connection.prepareStatement(query)) {
-                        statement.setString(1, email);
-                        statement.setString(2, password);
-
-                        try (ResultSet resultSet = statement.executeQuery()) {
-                            if (resultSet.next()) {
-                                JOptionPane.showMessageDialog(
-                                        null,
-                                        "Sign-in successful! Welcome, " + resultSet.getString("name") + ".",
-                                        "Success",
-                                        JOptionPane.INFORMATION_MESSAGE
-                                );
-                            } else {
-                                JOptionPane.showMessageDialog(
-                                        null,
-                                        "Invalid email or password. Please try again.",
-                                        "Sign-in Failed",
-                                        JOptionPane.ERROR_MESSAGE
-                                );
-                            }
-                        }
-                    }
-                } catch (SQLException ex) {
-                    JOptionPane.showMessageDialog(
-                            null,
-                            "Error connecting to the database: " + ex.getMessage(),
-                            "Database Error",
-                            JOptionPane.ERROR_MESSAGE
-                    );
-                }
-            }
-        });
+int main(int argc, char const *argv[])
+{
+    List l;
+    createList(&l);
+    append(&l, 5);
+    append(&l, 6);
+    append(&l, 7);
+    int x;
+    serve(&l, &x);
+    printf("%d", x);
+    return 0;
+}
 
 
-    }
-        private void updateDays (JComboBox < String > dayCombo,int monthIndex, int year){
-            int daysInMonth;
-
-            switch (monthIndex) {
-                case 1: // February
-                    daysInMonth = isLeapYear(year) ? 29 : 28;
-                    break;
-                case 3:
-                case 5:
-                case 8:
-                case 10:
-                    daysInMonth = 30;
-                    break;
-                default:
-                    daysInMonth = 31;
-                    break;
-            }
-
-            dayCombo.removeAllItems();
-            for (int i = 1; i <= daysInMonth; i++) {
-                dayCombo.addItem(String.valueOf(i));
-            }
-        }
-
-        private boolean isLeapYear ( int year){
-            return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
-        }
-
-
-    }
