@@ -572,3 +572,21 @@ int main(int argc, char const *argv[])
 }
 
 
+//-----------------------------------------------------
+
+void bubblesort(List *l){
+    for (int i = 0; i < l->count; i++)
+    {
+        for (int j = 0; j < l->count - 1; j++)
+        {
+            if (l->items[j] > l->items[j + 1])
+            {
+                float temp = l->items[j];
+                l->items[j] = l->items[j + 1];
+                l->items[j + 1] = temp;
+            }
+            
+        }
+        
+    }
+}
