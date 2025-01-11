@@ -520,6 +520,35 @@ void append(List *l, int x){
     }
 }
 
+void posappend(List *l, int x, int pos){
+    if (isListFull(l))
+    {
+        printf("List is full");
+    }
+    else{
+        for (int i = l->count; i >= pos; i--)
+        {
+            l->items[i + 1] = l->items[i];
+        }
+        l->items[pos] = x;
+        l->count++;
+    }
+}
+
+void posserve(List *l, int *x, int pos){
+    if (isListEmpty(l))
+    {
+        printf("List is empty");
+    }else{
+        *x = l->items[pos];
+        for (int i = pos; i < l->count; i++)
+        {
+            l->items[i] = l->items[i + 1];
+        }
+        l->count--;
+    }
+}
+
 void serve(List *l, int *x){
     if (isListEmpty(l))
     {
