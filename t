@@ -271,6 +271,34 @@ namespace test2App
                 throw;
             }finally { conn.Close(); }
         }
+
+private void studentsList_SelectedIndexChanged(object sender, EventArgs e)
+{
+    if (studentsList.SelectedItem == null) return;
+    String selected = studentsList.SelectedItem.ToString();
+    int id = int.Parse(selected.Split('-')[0].Trim());
+
+    try
+    {
+        conn.Open();
+        var cmd = new MySqlCommand("Select * FROM student WHERE Id=@id", conn);
+        cmd.Parameters.AddWithValue("@id", id); 
+        
+        var dr = cmd.ExecuteReader();
+        if (dr.Read())
+        {
+            selectedStudentId = id;
+            txtName.Text = dr["Name"].ToString();
+            txtAge.Text = dr["Age"].ToString();
+        }
+    }
+    catch (Exception)
+    {
+
+        throw;
+    }
+    finally {  conn.Close(); }
+}
     }
 }
 
