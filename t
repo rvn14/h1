@@ -165,3 +165,84 @@ private void btnAdd_Click(object sender, EventArgs e)
             ClearFields();
             LoadStudents();
         }
+
+-------------------------------------------------------------------------------------------
+
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using MySql.Data.MySqlClient;
+
+namespace test2App
+{
+    public partial class Home : Form
+    {
+        public Home()
+        {
+            InitializeComponent();
+            LoadStudents();
+        }
+        public static String connectionString = "server=localhost;user=root;password=DJdas12345;database=testdb";
+        public static MySqlConnection conn = new MySqlConnection(connectionString);
+
+        public void ClearFields()
+        {
+            txtName.Clear();
+            txtAge.Clear();
+            conn.Close();
+        }
+        public void LoadStudents()
+        {
+            studentsList.Items.Clear();
+            try
+            {
+                conn.Open();
+                MySqlCommand cmd = new MySqlCommand("Select * FROM student",conn);
+                Console.WriteLine("Connection Running");
+                var dr = cmd.ExecuteReader();
+
+                Console.WriteLine(dr);
+                while (dr.Read())
+                {
+                    studentsList.Items.Add($"{dr["Id"]} - {dr["Name"]}");
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }finally
+            {
+                conn.Close();
+            }
+
+        }
+
+        private void btnAdd_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                conn.Open();
+                var cmd = new MySqlCommand("INSERT INTO Student (name, age) VALUES (@name, @age)", conn);
+                cmd.Parameters.AddWithValue("@name", txtName.Text.Trim());
+                cmd.Parameters.AddWithValue("@age", txtAge.Text.Trim());
+                cmd.ExecuteNonQuery();
+                MessageBox.Show("Updated Successfully", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                ClearFields();
+                LoadStudents();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }finally { conn.Close(); }
+        }
+    }
+}
+
