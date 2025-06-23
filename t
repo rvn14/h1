@@ -272,6 +272,30 @@ namespace test2App
             }finally { conn.Close(); }
         }
 
+private void btnDelete_Click(object sender, EventArgs e)
+        {
+            if (selectedStudentId == -1)
+            {
+                MessageBox.Show("Select a student to delete.");
+                return;
+            }
+
+            var confirm = MessageBox.Show("Are you sure you want to delete this student?", "Confirm", MessageBoxButtons.YesNo);
+            if (confirm == DialogResult.Yes)
+            {
+                using (var conn = new MySqlConnection(connectionString))
+                {
+                    conn.Open();
+                    var cmd = new MySqlCommand("DELETE FROM Students WHERE id=@id", conn);
+                    cmd.Parameters.AddWithValue("@id", selectedStudentId);
+                    cmd.ExecuteNonQuery();
+                }
+                MessageBox.Show("Student deleted.");
+                ClearFields();
+                LoadStudents();
+            }
+        }
+
 private void studentsList_SelectedIndexChanged(object sender, EventArgs e)
 {
     if (studentsList.SelectedItem == null) return;
