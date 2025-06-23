@@ -73,6 +73,8 @@ namespace testForm
     }
 }
 
+
+
 namespace SignupApp
 {
     public partial class SignupForm : Form
@@ -141,3 +143,25 @@ namespace SignupApp
         }
     }
 }
+
+private void btnAdd_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(txtName.Text) || string.IsNullOrWhiteSpace(txtAge.Text) || string.IsNullOrWhiteSpace(txtGrade.Text))
+            {
+                MessageBox.Show("All fields are required.");
+                return;
+            }
+
+            using (var conn = new MySqlConnection(connectionString))
+            {
+                conn.Open();
+                var cmd = new MySqlCommand("INSERT INTO Students (name, age, grade) VALUES (@name, @age, @grade)", conn);
+                cmd.Parameters.AddWithValue("@name", txtName.Text.Trim());
+                cmd.Parameters.AddWithValue("@age", int.Parse(txtAge.Text.Trim()));
+                cmd.Parameters.AddWithValue("@grade", txtGrade.Text.Trim());
+                cmd.ExecuteNonQuery();
+            }
+            MessageBox.Show("Student added.");
+            ClearFields();
+            LoadStudents();
+        }
