@@ -166,6 +166,34 @@ private void btnAdd_Click(object sender, EventArgs e)
             LoadStudents();
         }
 
+private void btnUpdate_Click(object sender, EventArgs e)
+        {
+            if (selectedStudentId == -1)
+            {
+                MessageBox.Show("Select a student to update.");
+                return;
+            }
+            if (string.IsNullOrWhiteSpace(txtName.Text) || string.IsNullOrWhiteSpace(txtAge.Text) || string.IsNullOrWhiteSpace(txtGrade.Text))
+            {
+                MessageBox.Show("All fields are required.");
+                return;
+            }
+
+            using (var conn = new MySqlConnection(connectionString))
+            {
+                conn.Open();
+                var cmd = new MySqlCommand("UPDATE Students SET name=@name, age=@age, grade=@grade WHERE id=@id", conn);
+                cmd.Parameters.AddWithValue("@name", txtName.Text.Trim());
+                cmd.Parameters.AddWithValue("@age", int.Parse(txtAge.Text.Trim()));
+                cmd.Parameters.AddWithValue("@grade", txtGrade.Text.Trim());
+                cmd.Parameters.AddWithValue("@id", selectedStudentId);
+                cmd.ExecuteNonQuery();
+            }
+            MessageBox.Show("Student updated.");
+            ClearFields();
+            LoadStudents();
+        }
+
 -------------------------------------------------------------------------------------------
 
 using System;
