@@ -72,3 +72,72 @@ namespace testForm
 
     }
 }
+
+namespace SignupApp
+{
+    public partial class SignupForm : Form
+    {
+        // Connection string (edit password/db as needed)
+        private string connectionString = "server=localhost;user=root;password=12345;database=database1";
+
+        public SignupForm()
+        {
+            InitializeComponent();
+        }
+
+        private void btnSignup_Click(object sender, EventArgs e)
+        {
+            string username = txtUsername.Text.Trim();
+            string password = txtPassword.Text.Trim();
+            string confirmPassword = txtConfirmPassword.Text.Trim();
+
+            // --- Basic Validation ---
+            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password) || string.IsNullOrEmpty(confirmPassword))
+            {
+                MessageBox.Show("Please fill in all fields.");
+                return;
+            }
+            if (password != confirmPassword)
+            {
+                MessageBox.Show("Passwords do not match.");
+                return;
+            }
+
+            // --- Check if username exists ---
+            using (MySqlConnection conn = new MySqlConnection(connectionString))
+            {
+                try
+                {
+                    conn.Open();
+
+                    // Check if username already exists
+                    string checkUserQuery = "SELECT COUNT(*) FROM users WHERE username = @username";
+                    MySqlCommand checkCmd = new MySqlCommand(checkUserQuery, conn);
+                    checkCmd.Parameters.AddWithValue("@username", username);
+
+                    int userCount = Convert.ToInt32(checkCmd.ExecuteScalar());
+                    if (userCount > 0)
+                    {
+                        MessageBox.Show("Username already exists. Choose another.");
+                        return;
+                    }
+
+                    // Insert new user
+                    string insertQuery = "INSERT INTO users (username, password) VALUES (@username, @password)";
+                    MySqlCommand insertCmd = new MySqlCommand(insertQuery, conn);
+                    insertCmd.Parameters.AddWithValue("@username", username);
+                    insertCmd.Parameters.AddWithValue("@password", password); // For demo only
+
+                    insertCmd.ExecuteNonQuery();
+
+                    MessageBox.Show("Signup successful! You can now log in.");
+                    this.Close(); // Or clear fields, or redirect to login
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Database error: " + ex.Message);
+                }
+            }
+        }
+    }
+}
