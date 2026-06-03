@@ -58,6 +58,20 @@ CURSOR cur_student_by_city(p_city VARCHAR2) IS
       DBMS_OUTPUT.PUT_LINE('Employee not found.');
    END IF;
 
+DECLARE
+   TYPE mark_array IS TABLE OF NUMBER
+   INDEX BY BINARY_INTEGER;
+
+   v_marks mark_array;
+BEGIN
+   v_marks(1) := 80;
+   v_marks(2) := 75;
+   v_marks(3) := 90;
+
+   DBMS_OUTPUT.PUT_LINE('Mark 1: ' || v_marks(1));
+   DBMS_OUTPUT.PUT_LINE('Mark 2: ' || v_marks(2));
+   DBMS_OUTPUT.PUT_LINE('Mark 3: ' || v_marks(3));
+END;
 
 INSERT INTO Student VALUES ('CT105', 'Nimesha', 'Matara');
    DBMS_OUTPUT.PUT_LINE(SQL%ROWCOUNT || ' row inserted.');
