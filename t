@@ -1,82 +1,80 @@
-nano /etc/hostname
-nano /etc/hosts
+SET SERVEROUTPUT ON;
+SET VERIFY ON;
 
-reboot
-
-sudo apt install samba krb5-config winbind smbclient
-
-sudo mv /etc/samba/smb.conf /etc/samba/smb.conf.original
-
-sudo samba-tool domain provision
-
-sudo cp /var/lib/samba/private/krb5.conf /etc/krb5.conf
+DECLARE
+   v_no Student.Std_No%TYPE;
+   v_name Student.Std_Name%TYPE;
+v_dept_id employees.department_id%TYPE := &department_id;
 
 
-sudo systemctl disable --now smbd nmbd winbind systemd-resolved
-sudo systemctl unmask samba-ad-dc
-sudo systemctl enable --now samba-ad-dc
-sudo samba-tool domain level show
+   CURSOR cur_student IS
+      SELECT Std_No, Std_Name
+      FROM Student
+      ORDER BY Std_No;
+
+CURSOR cur_emp(p_dept_id employees.department_id%TYPE) IS
+      SELECT employee_id, first_name
+      FROM employees
+      WHERE department_id = p_dept_id;
+BEGIN
+   OPEN cur_student;
+
+   LOOP
+      FETCH cur_student INTO v_no, v_name;
+      EXIT WHEN cur_student%NOTFOUND;
+
+      DBMS_OUTPUT.PUT_LINE(v_no || ' - ' || v_name);
+   END LOOP;
+
+   CLOSE cur_student;
+END;
+/
 
 
-sudo rm /etc/resolv.conf
+SET SERVEROUTPUT ON;
+
+DECLARE
+   CURSOR cur_student IS
+      SELECT Std_No, Std_Name, Address
+      FROM Student;
+BEGIN
+   FOR rec IN cur_student LOOP
+      DBMS_OUTPUT.PUT_LINE(rec.Std_No || ' - ' || rec.Std_Name || ' - ' || rec.Address);
+   END LOOP;
+END;
+/
+
+CURSOR cur_student_by_city(p_city VARCHAR2) IS
+   SELECT Std_No, Std_Name
+   FROM Student
+   WHERE Address = p_city;
+
+   IF SQL%ISOPEN THEN
+      DBMS_OUTPUT.PUT_LINE('Implicit cursor is open.');
+   ELSE
+      DBMS_OUTPUT.PUT_LINE('Implicit cursor is closed.');
+   END IF;
+   IF SQL%NOTFOUND THEN
+      DBMS_OUTPUT.PUT_LINE('Employee not found.');
+   END IF;
 
 
-sudo nano /etc/resolv.conf
+INSERT INTO Student VALUES ('CT105', 'Nimesha', 'Matara');
+   DBMS_OUTPUT.PUT_LINE(SQL%ROWCOUNT || ' row inserted.');
 
-sudo samba-tool user create FCTuser01
+UPDATE Student
+   SET Std_Name = 'Ayesh'
+   WHERE Std_No = 'CT102';
 
-sudo apt install isc-dhcp-serve
+DELETE FROM Student
+   WHERE Address = 'Colombo';
 
-sudo nano /etc/default/isc-dhcp-server
+COMMIT;
 
-
-sudo nano /etc/dhcp/dhcpd.conf
-
-
-subnet 172.16.0.0 netmask 255.255.255.0 {
-  range 172.16.0.20 172.16.0.100;
-  option routers 172.16.0.1;
-  option domain-name-servers 172.16.0.10;
-  option domain-name "fct.kel.ac.lk";
-  default-lease-time 600;
-  max-lease-time 7200;
-}
-
-sudo systemctl restart isc-dhcp-server
-
-sudo systemctl enable isc-dhcp-server
-
-sudo systemctl status isc-dhcp-server
-
-
-# 1. Display Date and Time every minute
-* * * * * date >> /home/user/time.log
-
-# 2. System Update daily at 11:30 PM
-30 23 * * * sudo apt update && sudo apt upgrade -y
-
-# 3. Clear Temporary Files every Sunday at 2 AM
-0 2 * * 0 rm -rf /tmp/*
-
-# 4. Backup a Folder daily at midnight
-0 0 * * * tar -czf /home/user/Documents_backup_$(date +\%F).tar.gz /home/user/Documents
-
-# 5. Disk Usage Report daily at 6 PM
-0 18 * * * df -h >/home/user/disk_report.txt
-
-# 6. Check System Uptime every hour
-0 * * * * uptime >/home/user/uptime.log
-
-# 7. Monitor a Service every 10 minutes
-*/10 * * * * systemctl is-active --quiet apache2 || systemctl restart apache2
-
-# 8. Database Backup every night at 1 AM
-0 1 * * * mysqldump -u root -pYourPassword dbname > /home/user/db_backup_$(date +\%F).sql
-
-# 9. Email System Status every morning at 9 AM
-0 9 * * * top -bn1 | head -20 | mail -s "Daily System Report" user@example.com
-
-# 10. Sync Files with Cloud Storage daily at 3 AM
-0 3 * * * rclone sync /home/user/backup remote:backup
+EXCEPTION
+   WHEN NO_DATA_FOUND THEN
+      DBMS_OUTPUT.PUT_LINE('No employee found with employee id 200.');
+END;
+/
 
 
