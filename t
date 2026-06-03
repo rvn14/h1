@@ -73,6 +73,17 @@ BEGIN
    DBMS_OUTPUT.PUT_LINE('Mark 3: ' || v_marks(3));
 END;
 
+
+   v_inventory('Home Goods') := 85;
+   v_inventory('Books') := 3200;
+
+   v_key := v_inventory.FIRST;
+
+   WHILE v_key IS NOT NULL LOOP
+      DBMS_OUTPUT.PUT_LINE(v_key || ' : ' || v_inventory(v_key));
+      v_key := v_inventory.NEXT(v_key);
+   END LOOP;
+
 INSERT INTO Student VALUES ('CT105', 'Nimesha', 'Matara');
    DBMS_OUTPUT.PUT_LINE(SQL%ROWCOUNT || ' row inserted.');
 
